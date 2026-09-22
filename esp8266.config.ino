@@ -37,3 +37,26 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   Serial.println();
 }
+
+void reconnect() {
+  while (!client.connected()) {
+    Serial.print("Connecting to MQTT...");
+
+    if (client.connect("ESP8266_A7X91", "freemqtt", "public")) {
+      Serial.println("connected!");
+
+      client.subscribe(topic);
+
+      Serial.println("Subscribed to:");
+      Serial.println(topic);
+
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" retrying...");
+
+      delay(5000);
+    }
+  }
+}
+
