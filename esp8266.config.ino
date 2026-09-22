@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <cstring>
 
 const char* ssid = "WIFI_SSID";
 const char* password = "WIFI_PASSWORD";
@@ -10,6 +11,12 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 const char* topic = "TOPIC";
+
+const char ON_PER[] = "ON";
+const char OFF_PER[] = "OFF";
+
+#define Relay_Pin D4
+
 
 void setup_wifi() {
   delay(10);
@@ -28,15 +35,50 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message received: ");
 
-  for (unsigned int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+bool Equal(const char* per, byte* payload, unsigned int length) {
+
+  unsigned int perLength = strlen(per);
+
+  if (length != perLength) {
+    return false;
   }
 
-  Serial.println();
+  for (unsigned int i = 0; i < perLength; i++) {
+    if (payload[i] != per[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }
+
+
+void callback(char* topic, byte* payload, unsigned int length) {
+
+  Serial.print("Message received: ");
+
+  if (Equal(ON_PER, payload, length)) {
+
+    digitalWrite(Relay_Pin, HIGH);
+
+    Serial.println("Relay ON !!!!");
+
+  }
+  else if (Equal(OFF_PER, payload, length)) {
+
+    digitalWrite(Relay_Pin, LOW);
+
+    Serial.println("Relay OFF !!!!");
+
+  }
+  else {
+
+    Serial.println("Undefined Message !!!!");
+
+  }
+}
+
 
 void reconnect() {
   while (!client.connected()) {
@@ -63,11 +105,14 @@ void reconnect() {
 void setup() {
   Serial.begin(115200);
 
+  pinMode(Relay_Pin, OUTPUT);
+
   setup_wifi();
 
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
 }
+
 
 void loop() {
   if (!client.connected()) {
@@ -76,4 +121,3 @@ void loop() {
 
   client.loop();
 }
-
