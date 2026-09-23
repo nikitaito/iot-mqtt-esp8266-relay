@@ -30,4 +30,14 @@ func New(cfg *config.Config) (*Client, error) {
 	opts.OnConnectionLost = func(c paho.Client, err error) {
 		fmt.Printf("mqtt: connection lost: %v\n", err)
 	}
+
+	pahoClient := paho.NewClient(opts)
+
+	token := pahoClient.Connect()
+	if !token.WaitTimeout(10 * time.Second) {
+		return nil, fmt.Errorf("mqtt: connect timed out")
+	}
+	if err := token.Error(); err != nil {
+		return nil, fmt.Errorf("mqtt: connect failed: %w", err)
+	}
 }
