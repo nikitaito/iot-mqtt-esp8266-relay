@@ -40,4 +40,9 @@ func New(cfg *config.Config) (*Client, error) {
 	if err := token.Error(); err != nil {
 		return nil, fmt.Errorf("mqtt: connect failed: %w", err)
 	}
+
+	return &Client{
+		pahoClient: pahoClient,
+		topic:      cfg.MQTTTopic,
+	}, nil
 }
