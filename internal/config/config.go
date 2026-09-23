@@ -66,6 +66,28 @@ func parseAllowedIDs(raw string) ([]int64, error) {
 	return ids, nil
 }
 
+func (c *Config) validate() error {
+	var missing []string
+
+	if c.TelegramBotToken == "" {
+		missing = append(missing, "TELEGRAM_BOT_TOKEN")
+	}
+	if c.MQTTBrokerURL == "" {
+		missing = append(missing, "MQTT_BROKER_URL")
+	}
+	if c.MQTTTopic == "" {
+		missing = append(missing, "MQTT_TOPIC")
+	}
+	if len(c.AllowedTelegramUserIDs) == 0 {
+		missing = append(missing, "ALLOWED_TELEGRAM_USER_IDS")
+	}
+
+	if len(missing) > 0 {
+		return fmt.Errorf("missing required config: %s", strings.Join(missing, ", "))
+	}
+	return nil
+}
+
 func getEnvOrDefault(key, def string) string {
 	if v := os.Getenv(key); v != "" {
 		return v
