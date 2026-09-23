@@ -1,7 +1,10 @@
 package telegram
 
 import (
+	"context"
+
 	"github.com/go-telegram/bot"
+
 	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/config"
 	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/device"
 )
@@ -12,7 +15,7 @@ type Bot struct {
 	relay *device.Relay
 }
 
-func New(cfg *config.Config, api *bot.Bot, relay *device.Relay) (*Bot, error) {
+func New(cfg *config.Config, relay *device.Relay) (*Bot, error) {
 	b := &Bot{
 		cfg:   cfg,
 		relay: relay,
@@ -33,4 +36,8 @@ func New(cfg *config.Config, api *bot.Bot, relay *device.Relay) (*Bot, error) {
 	api.RegisterHandler(bot.HandlerTypeMessageText, "/off", bot.MatchTypeExact, b.handleOff)
 
 	return b, nil
+}
+
+func (b *Bot) Start(ctx context.Context) {
+	b.api.Start(ctx)
 }
