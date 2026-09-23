@@ -56,3 +56,7 @@ func (c *Client) Publish(payload string) error {
 
 	return token.Error()
 }
+
+func (c *Client) Disconnect() {
+	c.pahoClient.Disconnect(250)
+}
