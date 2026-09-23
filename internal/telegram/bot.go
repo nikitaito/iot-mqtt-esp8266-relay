@@ -66,3 +66,10 @@ func (b *Bot) reply(ctx context.Context, chatID int64, text string) {
 		log.Printf("telegram: failed to send message: %v", err)
 	}
 }
+
+func (b *Bot) handleStart(ctx context.Context, api *bot.Bot, update *models.Update) {
+	if update.Message == nil {
+		return
+	}
+	b.reply(ctx, update.Message.Chat.ID, "Hi! Use /on and /off to control the relay.")
+}
