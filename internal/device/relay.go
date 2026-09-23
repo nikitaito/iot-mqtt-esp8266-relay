@@ -27,7 +27,15 @@ func New(mqttclient *mqtt.Client) *Relay {
 
 func (rel *Relay) TurnON() error {
 	err := rel.mqttClient.Publish("Relay_ON")
-	return err
+	if err != nil {
+		return err
+	}
+
+	rel.mu.Lock()
+	rel.state = StateOn
+	rel.mu.Unlock()
+
+	return nil
 }
 
 func (rel *Relay) TurnOFF() error {
