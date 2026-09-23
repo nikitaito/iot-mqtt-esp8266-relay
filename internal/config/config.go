@@ -32,6 +32,13 @@ func Load() (*Config, error) {
 		MQTTPassword:     os.Getenv("MQTT_PASSWORD"),
 		MQTTTopic:        os.Getenv("MQTT_TOPIC"),
 	}
+
+	ids, err := parseAllowedIDs("ALLOWED_TELEGRAM_USER_IDS")
+	if err != nil {
+		return nil, err
+	}
+	cfg.AllowedTelegramUserIDs = ids
+
 	return cfg, errors.New("")
 
 }
