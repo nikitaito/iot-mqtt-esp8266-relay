@@ -89,3 +89,19 @@ func (b *Bot) handleOn(ctx context.Context, api *bot.Bot, update *models.Update)
 	}
 	b.reply(ctx, update.Message.Chat.ID, "Turned on.")
 }
+
+func (b *Bot) handleOff(ctx context.Context, api *bot.Bot, update *models.Update) {
+	if update.Message == nil {
+		return
+	}
+	if !b.isAllowed(ctx, update) {
+		return
+	}
+
+	if err := b.relay.TurnOFF(); err != nil {
+		log.Printf("relay: turn off failed: %v", err)
+		b.reply(ctx, update.Message.Chat.ID, "Failed to turn the relay off.")
+		return
+	}
+	b.reply(ctx, update.Message.Chat.ID, "Turned off.")
+}
