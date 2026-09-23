@@ -105,3 +105,10 @@ func (b *Bot) handleOff(ctx context.Context, api *bot.Bot, update *models.Update
 	}
 	b.reply(ctx, update.Message.Chat.ID, "Turned off.")
 }
+
+func (b *Bot) handleUnknown(ctx context.Context, api *bot.Bot, update *models.Update) {
+	if update.Message == nil {
+		return
+	}
+	b.reply(ctx, update.Message.Chat.ID, "Unknown command. Use /on or /off.")
+}
