@@ -27,4 +27,7 @@ func New(cfg *config.Config) (*Client, error) {
 		fmt.Println("mqtt : connected to brocker")
 	}
 
+	opts.OnConnectionLost = func(c paho.Client, err error) {
+		fmt.Printf("mqtt: connection lost: %v\n", err)
+	}
 }
