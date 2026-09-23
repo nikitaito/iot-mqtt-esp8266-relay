@@ -46,6 +46,15 @@ func Load() (*Config, error) {
 	return cfg, nil
 }
 
+func (c *Config) IsAllowed(userID int64) bool {
+	for _, id := range c.AllowedTelegramUserIDs {
+		if id == userID {
+			return true
+		}
+	}
+	return false
+}
+
 func parseAllowedIDs(raw string) ([]int64, error) {
 	if raw == "" {
 		return nil, nil
