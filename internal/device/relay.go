@@ -2,6 +2,13 @@ package device
 
 import "github.com/nikitaito/iot-mqtt-esp8266-relay/internal/mqtt"
 
+type State string
+
+const (
+	StateOn  State = "ON"
+	StateOff State = "OFF"
+)
+
 type Relay struct {
 	mqttClient *mqtt.Client
 }
