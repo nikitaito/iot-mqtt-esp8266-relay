@@ -46,3 +46,13 @@ func New(cfg *config.Config) (*Client, error) {
 		topic:      cfg.MQTTTopic,
 	}, nil
 }
+
+func (c *Client) Publish(payload string) error {
+	token := c.pahoClient.Publish(c.topic, 1, false, payload)
+
+	if !token.WaitTimeout(5 * time.Second) {
+		return fmt.Errorf("mqtt: publish timed out")
+	}
+
+	return token.Error()
+}
