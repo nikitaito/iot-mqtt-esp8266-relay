@@ -32,7 +32,7 @@ func Load() (*Config, error) {
 		MQTTTopic:        os.Getenv("MQTT_TOPIC"),
 	}
 
-	ids, err := parseAllowedIDs("ALLOWED_TELEGRAM_USER_IDS")
+	ids, err := parseAllowedIDs(os.Getenv("ALLOWED_TELEGRAM_USER_IDS"))
 	if err != nil {
 		return nil, err
 	}
