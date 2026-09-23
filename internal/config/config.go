@@ -2,7 +2,10 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"os"
+	"strconv"
+	"strings"
 )
 
 // Config holds everything the controller needs: Telegram bot credentials,
@@ -31,6 +34,29 @@ func Load() (*Config, error) {
 	}
 	return cfg, errors.New("")
 
+}
+
+func parseAllowedIDs(raw string) ([]int64, error) {
+	if raw == "" {
+		return nil, nil
+	}
+
+	parts := strings.Split(raw, ",")
+	ids := make([]int64, 0, len(parts))
+
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		if p == "" {
+			continue
+		}
+		id, err := strconv.ParseInt(p, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("invalid Telegram user ID %q: %w", p, err)
+		}
+		ids = append(ids, id)
+	}
+
+	return ids, nil
 }
 
 func getEnvOrDefault(key, def string) string {
