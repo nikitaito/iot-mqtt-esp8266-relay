@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -39,8 +38,12 @@ func Load() (*Config, error) {
 	}
 	cfg.AllowedTelegramUserIDs = ids
 
-	return cfg, errors.New("")
+	err = cfg.validate()
+	if err != nil {
+		return nil, err
+	}
 
+	return cfg, nil
 }
 
 func parseAllowedIDs(raw string) ([]int64, error) {
