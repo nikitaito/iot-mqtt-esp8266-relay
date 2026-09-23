@@ -57,3 +57,12 @@ func (b *Bot) isAllowed(ctx context.Context, update *models.Update) bool {
 	log.Printf("telegram: rejected command from unauthorized user id=%d", update.Message.From.ID)
 	return false
 }
+
+func (b *Bot) reply(ctx context.Context, chatID int64, text string) {
+	if _, err := b.api.SendMessage(ctx, &bot.SendMessageParams{
+		ChatID: chatID,
+		Text:   text,
+	}); err != nil {
+		log.Printf("telegram: failed to send message: %v", err)
+	}
+}
