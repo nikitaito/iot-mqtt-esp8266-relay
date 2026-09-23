@@ -50,3 +50,9 @@ func (rel *Relay) TurnOFF() error {
 
 	return nil
 }
+
+func (r *Relay) State() State {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return r.state
+}
