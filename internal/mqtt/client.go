@@ -1,6 +1,7 @@
 package mqtt
 
 import (
+	"fmt"
 	"time"
 
 	paho "github.com/eclipse/paho.mqtt.golang"
@@ -22,5 +23,8 @@ func New(cfg *config.Config) (*Client, error) {
 		SetConnectTimeout(10 * time.Second).
 		SetConnectRetry(true).
 		SetConnectRetryInterval(5 * time.Second)
+	opts.OnConnect = func(c paho.Client) {
+		fmt.Println("mqtt : connected to brocker")
+	}
 
 }
