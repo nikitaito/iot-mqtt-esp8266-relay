@@ -6,6 +6,12 @@ type Relay struct {
 	mqttClient *mqtt.Client
 }
 
+func New(mqttclient *mqtt.Client) *Relay {
+	return &Relay{
+		mqttClient: mqttclient,
+	}
+}
+
 func (rel *Relay) TurnON() error {
 	err := rel.mqttClient.Publish("Relay_ON")
 	return err
