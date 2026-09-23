@@ -1,6 +1,10 @@
 package device
 
-import "github.com/nikitaito/iot-mqtt-esp8266-relay/internal/mqtt"
+import (
+	"sync"
+
+	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/mqtt"
+)
 
 type State string
 
@@ -11,6 +15,8 @@ const (
 
 type Relay struct {
 	mqttClient *mqtt.Client
+	mu         sync.Mutex
+	state      State
 }
 
 func New(mqttclient *mqtt.Client) *Relay {
