@@ -2,8 +2,10 @@ package telegram
 
 import (
 	"context"
+	"log"
 
 	"github.com/go-telegram/bot"
+	"github.com/go-telegram/bot/models"
 
 	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/config"
 	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/device"
@@ -40,4 +42,18 @@ func New(cfg *config.Config, relay *device.Relay) (*Bot, error) {
 
 func (b *Bot) Start(ctx context.Context) {
 	b.api.Start(ctx)
+}
+
+func (b *Bot) isAllowed(ctx context.Context, update *models.Update) bool {
+	if update.Message == nil || update.Message.From == nil {
+		return false
+	}
+
+	if b.cfg.IsAllowed(update.Message.From.ID) {
+		return true
+	}
+
+	b.reply(ctx, update.Message.Chat.ID, "You are not authorized to use this bot.")
+	log.Printf("telegram: rejected command from unauthorized user id=%d", update.Message.From.ID)
+	return false
 }
