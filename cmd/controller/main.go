@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/joho/godotenv"
+
 	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/config"
 	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/device"
 	"github.com/nikitaito/iot-mqtt-esp8266-relay/internal/mqtt"
@@ -14,6 +16,10 @@ import (
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Println("main: no .env file found, relying on environment variables")
+	}
+
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("config: %v", err)
