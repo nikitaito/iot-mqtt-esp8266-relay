@@ -4,6 +4,10 @@ import (
 	"context"
 	"log"
 
+	// "net/http"
+	// "net/url"
+	// "time"
+
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
 
@@ -23,7 +27,19 @@ func New(cfg *config.Config, relay *device.Relay) (*Bot, error) {
 		relay: relay,
 	}
 
+	// proxyURL, err := url.Parse("http://127.0.0.1:12334")
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// httpClient := &http.Client{
+	// 	Transport: &http.Transport{
+	// 		Proxy: http.ProxyURL(proxyURL),
+	// 	},
+	// }
+
 	opts := []bot.Option{
+		// bot.WithHTTPClient(10*time.Second, httpClient),
 		bot.WithDefaultHandler(b.handleUnknown),
 	}
 
