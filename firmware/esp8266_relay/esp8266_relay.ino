@@ -5,15 +5,21 @@
 const char* ssid = "WIFI_SSID";
 const char* password = "WIFI_PASSWORD";
 
-const char* mqtt_server = "MQTT_SERVER_ADDRESS";
+const char* mqtt_server = "";
+const int mqtt_port = 1883; 
+
+const char* mqtt_user = "";
+const char* mqtt_pass = "";
+
+const char* mqtt_client_id = "";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 const char* topic = "TOPIC";
 
-const char ON_PER[] = "ON";
-const char OFF_PER[] = "OFF";
+const char ON_PER[] = "Relay_ON";
+const char OFF_PER[] = "Relay_OFF";
 
 #define Relay_Pin D4
 
@@ -60,14 +66,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   if (Equal(ON_PER, payload, length)) {
 
-    digitalWrite(Relay_Pin, HIGH);
+    digitalWrite(Relay_Pin, LOW);
 
     Serial.println("Relay ON !!!!");
 
   }
   else if (Equal(OFF_PER, payload, length)) {
 
-    digitalWrite(Relay_Pin, LOW);
+    digitalWrite(Relay_Pin, HIGH);
 
     Serial.println("Relay OFF !!!!");
 
@@ -84,7 +90,7 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Connecting to MQTT...");
 
-    if (client.connect("ESP8266_A7X91", "freemqtt", "public")) {
+    if (client.connect(mqtt_client_id, mqtt_user, mqtt_pass)) {
       Serial.println("connected!");
 
       client.subscribe(topic);
@@ -109,7 +115,7 @@ void setup() {
 
   setup_wifi();
 
-  client.setServer(mqtt_server, 1883);
+  client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
 }
 
